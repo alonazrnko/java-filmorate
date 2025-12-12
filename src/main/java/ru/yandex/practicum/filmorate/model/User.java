@@ -9,8 +9,8 @@ public class User {
 
     private int id;
 
-    @NotNull
-    @Email
+    @NotBlank(message = "Email не может быть пустым")
+    @Email(message = "Email должен быть корректным")
     private String email;
 
     @NotBlank
