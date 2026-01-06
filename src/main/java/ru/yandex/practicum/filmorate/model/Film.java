@@ -5,22 +5,26 @@ import lombok.Data;
 import ru.yandex.practicum.filmorate.validation.ReleaseDateConstraint;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Film {
 
-    private int id;
+    private long id;
 
-    @NotBlank(message = "Название не может быть пустым")
+    @NotBlank
     private String name;
 
-    @Size(max = 200, message = "Максимальная длина описания — 200 символов")
+    @Size(max = 200)
     private String description;
 
-    @NotNull(message = "Дата релиза обязательна")
+    @NotNull
     @ReleaseDateConstraint
     private LocalDate releaseDate;
 
-    @Positive(message = "Продолжительность должна быть положительной")
+    @Positive
     private int duration;
+
+    private Set<Long> likes = new HashSet<>();
 }
