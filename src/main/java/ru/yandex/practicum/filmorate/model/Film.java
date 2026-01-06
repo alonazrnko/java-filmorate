@@ -26,5 +26,10 @@ public class Film {
     @Positive
     private int duration;
 
+    private Set<Genre> genres = new HashSet<>();
+
+    @NotNull(message = "MPA рейтинг обязателен")
+    private MpaRating mpa;
+
     private Set<Long> likes = new HashSet<>();
 }
