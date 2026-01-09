@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage.friend;
 import ru.yandex.practicum.filmorate.model.Friendship;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface FriendshipStorage {
 
