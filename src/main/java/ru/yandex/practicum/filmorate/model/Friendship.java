@@ -9,5 +9,4 @@ public class Friendship {
 
     private long userId;     // кто отправил запрос
     private long friendId;   // кому отправили
-    private FriendshipStatus status;
 }
