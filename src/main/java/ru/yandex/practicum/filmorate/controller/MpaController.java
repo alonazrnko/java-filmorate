@@ -18,8 +18,12 @@ public class MpaController {
     private final MpaService mpaService;
 
     @GetMapping
-    public List<MpaRating> getAll() { return mpaService.getAll(); }
+    public List<MpaRating> getAll() {
+        return mpaService.getAll();
+    }
 
     @GetMapping("/{id}")
-    public MpaRating getById(@PathVariable int id) { return mpaService.getById(id); }
+    public MpaRating getById(@PathVariable int id) {
+        return mpaService.getById(id);
+    }
 }
