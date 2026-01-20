@@ -6,12 +6,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.dao.repository.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.storage.genre.GenreRowMapper;
-import ru.yandex.practicum.filmorate.storage.mpa.MpaRowMapper;
+import ru.yandex.practicum.filmorate.dao.repository.mappers.GenreRowMapper;
+import ru.yandex.practicum.filmorate.dao.repository.mappers.MpaRowMapper;
 
 import java.sql.PreparedStatement;
 import java.util.*;

@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.dto;
+package ru.yandex.practicum.filmorate.dao.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class MpaDto {
+public class GenreDto {
     @NotNull
     private Long id;
 }
