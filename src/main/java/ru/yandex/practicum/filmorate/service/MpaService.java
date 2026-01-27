@@ -2,9 +2,10 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.dto.mpa.MpaDto;
+import ru.yandex.practicum.filmorate.dao.dto.mpa.MpaMapper;
+import ru.yandex.practicum.filmorate.dao.repository.MpaRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.model.MpaRating;
-import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
 import java.util.List;
 
@@ -12,15 +13,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MpaService {
 
-    private final MpaStorage mpaStorage;
+    private final MpaRepository mpaRepository;
 
-    public List<MpaRating> getAll() {
-        return mpaStorage.getAll();
+    public List<MpaDto> getAll() {
+        return mpaRepository.findAll().stream()
+                .map(MpaMapper::mapToMpaDto)
+                .toList();
     }
 
-    public MpaRating getById(int id) {
-        return mpaStorage.getById(id)
-                .orElseThrow(() -> new NotFoundException("MPA not found"));
+    public MpaDto getById(long mpaId) {
+        return mpaRepository.findById(mpaId)
+                .map(MpaMapper::mapToMpaDto)
+                .orElseThrow(() -> new NotFoundException("MPA with ID " + mpaId + " not found"));
+
+    }
+
+    public void validateMpaExists(long mpaId) {
+        if (!mpaRepository.existsById(mpaId)) {
+            throw new NotFoundException("MPA with id " + mpaId + " not found");
+        }
     }
 }
 
