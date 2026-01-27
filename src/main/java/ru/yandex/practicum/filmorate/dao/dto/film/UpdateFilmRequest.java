@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.dao.dto.film;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.model.MpaRating;
+import ru.yandex.practicum.filmorate.validation.ReleaseDateConstraint;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -19,19 +19,16 @@ public class UpdateFilmRequest {
     @Positive(message = "ID must be positive")
     private Long id;
 
-    @NotBlank(message = "The name cannot be empty")
     private String name;
 
     @Size(max = 200, message = "The description cannot exceed 200 characters")
     private String description;
 
-    @NotNull(message = "Release date is required")
+    @ReleaseDateConstraint
     private LocalDate releaseDate;
 
-    @Positive(message = "The duration must be positive")
     private Integer duration;
 
-    @Valid
     private Long mpa;
 
     private Set<Long> genres = new HashSet<>();
