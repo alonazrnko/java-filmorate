@@ -5,10 +5,9 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.HashSet;
 
 @Component
 public class FilmRowMapper implements RowMapper<Film> {
@@ -17,19 +16,19 @@ public class FilmRowMapper implements RowMapper<Film> {
     public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
         Film film = new Film();
 
-        film.setId(rs.getLong("id"));
+        film.setId(rs.getLong("film_id"));
         film.setName(rs.getString("name"));
         film.setDescription(rs.getString("description"));
-        film.setReleaseDate(rs.getObject("release_date", LocalDate.class));
         film.setDuration(rs.getInt("duration"));
 
-        int mpaId = rs.getInt("mpa_id");
-        if (!rs.wasNull()) {
-            film.setMpa(new MpaRating(mpaId, null));
-        }
+        MpaRating mpa = new MpaRating();
+        mpa.setId(rs.getLong("mpa_id"));
+        film.setMpa(mpa.getId());
 
-        film.setGenres(new HashSet<>());
-        film.setLikes(new HashSet<>());
+        Date releaseDate = rs.getDate("release_date");
+        if (releaseDate != null) {
+            film.setReleaseDate(releaseDate.toLocalDate());
+        }
 
         return film;
     }

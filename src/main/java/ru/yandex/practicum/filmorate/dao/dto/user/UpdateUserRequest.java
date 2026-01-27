@@ -7,24 +7,23 @@ import java.time.LocalDate;
 
 @Data
 public class UpdateUserRequest {
-    @NotNull(message = "ID обязателен для обновления")
-    @Positive(message = "ID должен быть положительным")
+    @NotNull(message = "ID is required")
+    @Positive(message = "ID must be positive")
     private Long id;
 
-    @Email(message = "Некорректный формат email")
-    @NotBlank(message = "Email не может быть пустым")
+    @Email(message = "Incorrect email format")
+    @NotBlank(message = "Email cannot be empty")
     private String email;
 
-    @NotBlank(message = "Логин не может быть пустым")
-    @Pattern(regexp = "\\S+", message = "Логин не может содержать пробелы")
+    @NotBlank(message = "Login cannot be empty")
+    @Pattern(regexp = "\\S+", message = "The login cannot contain spaces")
     private String login;
 
     private String name;
 
-    @Past(message = "Дата рождения не может быть в будущем")
+    @Past(message = "The date of birth cannot be in the future")
     private LocalDate birthday;
 
-    // Оставляем вспомогательные методы, если они используются в логике приложения
     public boolean hasEmail() {
         return email != null && !email.isBlank();
     }
