@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.dao.dto.film.NewFilmRequest;
 import ru.yandex.practicum.filmorate.dao.dto.film.UpdateFilmRequest;
 import ru.yandex.practicum.filmorate.dao.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.dao.repository.UserRepository;
+import ru.yandex.practicum.filmorate.exception.InternalServerException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -64,6 +65,14 @@ public class FilmService {
         updatedFilm.setLikes(likeService.getLikesIdsByFilm(request.getId()));
 
         return filmMapper.mapToFilmDto(updatedFilm);
+    }
+
+    public void delete(long id) {
+        getById(id);
+        boolean deleted = filmRepository.delete(id);
+        if (!deleted) {
+            throw new InternalServerException("Failed to delete film with id=" + id);
+        }
     }
 
     public FilmDto getById(long id) {
