@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.dao.dto.film.FilmDto;
 import ru.yandex.practicum.filmorate.dao.dto.user.NewUserRequest;
@@ -53,9 +54,12 @@ public class UserController {
 
     @GetMapping("/{id}/recommendations")
     public Collection<FilmDto> getRecommendations(@PathVariable long id) {
-        log.info("Пользователь: запрос на получение рекомендации по id={}", id);
-        Collection<FilmDto> recommendations = filmService.getRecommendations(id);
-        log.info("Фильм: запрос на получение всех рекомендаций");
-        return recommendations;
+        return filmService.getRecommendations(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable long id) {
+        userService.delete(id);
     }
 }

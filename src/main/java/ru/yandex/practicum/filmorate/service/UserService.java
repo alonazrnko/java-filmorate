@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.dao.dto.user.UserDto;
 import ru.yandex.practicum.filmorate.dao.dto.user.UserMapper;
 import ru.yandex.practicum.filmorate.dao.repository.FriendshipRepository;
 import ru.yandex.practicum.filmorate.dao.repository.UserRepository;
+import ru.yandex.practicum.filmorate.exception.InternalServerException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -46,6 +47,14 @@ public class UserService {
                 .map(user -> updateCollections(user, user.getId()))
                 .map(UserMapper::mapToUserDto)
                 .toList();
+    }
+
+    public void delete(long id) {
+        getById(id);
+        boolean deleted = userRepository.delete(id);
+        if (!deleted) {
+            throw new InternalServerException("Failed to delete user with id=" + id);
+        }
     }
 
     public UserDto getById(long id) {
