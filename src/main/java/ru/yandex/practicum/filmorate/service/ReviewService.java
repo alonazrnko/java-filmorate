@@ -10,6 +10,8 @@ import ru.yandex.practicum.filmorate.dao.dto.review.ReviewMapper;
 import ru.yandex.practicum.filmorate.dao.repository.ReviewRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.model.enums.EventOperation;
+import ru.yandex.practicum.filmorate.model.enums.EventType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +25,7 @@ public class ReviewService {
     private final UserService userService;
     private final FilmService filmService;
     private final ReviewLikeService reviewLikeService;
+    private final EventService eventService;
 
     public ReviewDto createReview(NewReviewRequest request) {
         userService.getById(request.getUserId());
@@ -33,6 +36,13 @@ public class ReviewService {
 
         log.info("Creating review id={} for the movie id={} from user id={}",
                 savedReview.getReviewId(), savedReview.getFilmId(), savedReview.getUserId());
+
+        eventService.addEvent(
+                savedReview.getUserId(),
+                EventType.REVIEW,
+                EventOperation.ADD,
+                savedReview.getReviewId()
+        );
 
         return reviewMapper.mapToReviewDto(savedReview);
     }
@@ -46,16 +56,30 @@ public class ReviewService {
 
         log.info("Updating review id={}", savedReview.getReviewId());
 
+        eventService.addEvent(
+                savedReview.getUserId(),
+                EventType.REVIEW,
+                EventOperation.UPDATE,
+                savedReview.getReviewId()
+        );
+
         return reviewMapper.mapToReviewDto(savedReview);
     }
 
     public void deleteReview(Long reviewId) {
-        reviewRepository.findById(reviewId)
+        Review deletedReview = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("Review with id=" + reviewId + " not found"));
 
         reviewRepository.delete(reviewId);
 
         log.info("Deleting review id={}", reviewId);
+
+        eventService.addEvent(
+                deletedReview.getUserId(),
+                EventType.REVIEW,
+                EventOperation.REMOVE,
+                reviewId
+        );
     }
 
     public ReviewDto getReviewById(Long reviewId) {
