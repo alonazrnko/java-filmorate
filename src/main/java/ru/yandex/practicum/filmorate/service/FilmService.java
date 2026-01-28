@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.dao.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.dao.repository.UserRepository;
 import ru.yandex.practicum.filmorate.exception.InternalServerException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -27,6 +28,7 @@ public class FilmService {
     private final GenreService genreService;
     private final LikeService likeService;
     private final MpaService mpaService;
+    private final UserService userService;
 
     public FilmDto create(NewFilmRequest request) {
         log.info("Creating film name={}", request.getName());
@@ -149,6 +151,21 @@ public class FilmService {
         }
 
         return targetLikesSet.stream()
+                .map((this::updateCollections))
+                .map(filmMapper::mapToFilmDto)
+                .toList();
+    }
+
+    public List<FilmDto> getCommonFilms(long userId, long friendId) {
+        userService.validateUserExists(userId);
+        userService.validateUserExists(friendId);
+
+        if (userId == friendId) {
+            throw new ValidationException("ID пользователей должны быть разным");
+        }
+
+        List<Film> commonFilms = filmRepository.getCommonFilms(userId, friendId);
+        return commonFilms.stream()
                 .map((this::updateCollections))
                 .map(filmMapper::mapToFilmDto)
                 .toList();
