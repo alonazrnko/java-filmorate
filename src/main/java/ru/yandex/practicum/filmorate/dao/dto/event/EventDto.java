@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.dao.dto.event;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
