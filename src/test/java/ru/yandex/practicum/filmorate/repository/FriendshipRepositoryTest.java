@@ -1,43 +1,49 @@
 package ru.yandex.practicum.filmorate.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.filmorate.dao.repository.FriendshipRepository;
+import ru.yandex.practicum.filmorate.dao.repository.mappers.FriendshipRowMapper;
 import ru.yandex.practicum.filmorate.model.Friendship;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@JdbcTest
 @AutoConfigureTestDatabase
-@Transactional
 class FriendshipRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
     private FriendshipRepository friendshipRepository;
 
-    private void insertUser(long id) {
+    @BeforeEach
+    void setUp() {
+        FriendshipRowMapper mapper = new FriendshipRowMapper();
+        friendshipRepository = new FriendshipRepository(jdbcTemplate, mapper);
+
+        jdbcTemplate.update("DELETE FROM friendships");
+        jdbcTemplate.update("DELETE FROM users");
+
         jdbcTemplate.update(
-                "INSERT INTO users (user_id, email, login) VALUES (?, ?, ?)",
-                id,
-                "user" + id + "@test.com",
-                "user" + id
+                "INSERT INTO users (user_id, email, login) VALUES (1, 'user1@mail.ru', 'user1')"
+        );
+        jdbcTemplate.update(
+                "INSERT INTO users (user_id, email, login) VALUES (2, 'user2@mail.ru', 'user2')"
+        );
+        jdbcTemplate.update(
+                "INSERT INTO users (user_id, email, login) VALUES (3, 'user3@mail.ru', 'user3')"
         );
     }
 
     @Test
-    void add_shouldInsertFriendship() {
-        insertUser(1L);
-        insertUser(2L);
-
+    void testAddFriendship() {
         Friendship friendship = new Friendship(1L, 2L);
 
         Friendship saved = friendshipRepository.add(friendship);
@@ -55,37 +61,28 @@ class FriendshipRepositoryTest {
     }
 
     @Test
-    void findAllByUserId_shouldReturnFriends() {
-        insertUser(1L);
-        insertUser(2L);
-        insertUser(3L);
+    void testFindAllByUserId() {
+        jdbcTemplate.update("INSERT INTO friendships (user_id, friend_id) VALUES (1, 2)");
+        jdbcTemplate.update("INSERT INTO friendships (user_id, friend_id) VALUES (1, 3)");
 
-        jdbcTemplate.update(
-                "INSERT INTO friendships (user_id, friend_id) VALUES (?, ?)",
-                1L, 2L
-        );
-        jdbcTemplate.update(
-                "INSERT INTO friendships (user_id, friend_id) VALUES (?, ?)",
-                1L, 3L
-        );
+        List<Friendship> friendships = friendshipRepository.findAllByUserId(1L);
 
-        List<Friendship> result = friendshipRepository.findAllByUserId(1L);
-
-        assertThat(result)
+        assertThat(friendships)
                 .hasSize(2)
                 .extracting(Friendship::getFriendId)
                 .containsExactlyInAnyOrder(2L, 3L);
     }
 
     @Test
-    void delete_shouldRemoveFriendship() {
-        insertUser(1L);
-        insertUser(2L);
+    void testFindAllByUserId_WhenNoFriends() {
+        List<Friendship> friendships = friendshipRepository.findAllByUserId(1L);
 
-        jdbcTemplate.update(
-                "INSERT INTO friendships (user_id, friend_id) VALUES (?, ?)",
-                1L, 2L
-        );
+        assertThat(friendships).isEmpty();
+    }
+
+    @Test
+    void testDeleteFriendship() {
+        jdbcTemplate.update("INSERT INTO friendships (user_id, friend_id) VALUES (1, 2)");
 
         friendshipRepository.delete(1L, 2L);
 
@@ -96,14 +93,5 @@ class FriendshipRepositoryTest {
         );
 
         assertThat(count).isEqualTo(0);
-    }
-
-    @Test
-    void findAllByUserId_shouldReturnEmptyList_whenNoFriends() {
-        insertUser(1L);
-
-        List<Friendship> result = friendshipRepository.findAllByUserId(1L);
-
-        assertThat(result).isEmpty();
     }
 }

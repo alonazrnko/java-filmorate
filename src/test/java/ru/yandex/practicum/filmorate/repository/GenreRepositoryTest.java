@@ -130,7 +130,7 @@ class GenreRepositoryTest {
     @Test
     void testSaveGenresIdsByFilm_WithNullSet() {
         genreRepository.saveGenresIdsByFilm(1L, null);
-        
+
         Set<Long> updatedGenreIds = genreRepository.findIdsByFilm(1L);
         assertThat(updatedGenreIds).isEmpty();
     }
