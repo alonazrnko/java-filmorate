@@ -376,7 +376,7 @@ class FilmRepositoryTest {
                 "ridley",
                 Set.of("title", "director", "description")
         );
-        
+
         assertThat(result)
                 .hasSize(1)
                 .first()
