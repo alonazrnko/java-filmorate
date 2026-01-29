@@ -31,7 +31,6 @@ class MpaRepositoryTest {
 
         jdbcTemplate.update("DELETE FROM mpa_ratings");
 
-        // Создание тестовых данных
         jdbcTemplate.update("INSERT INTO mpa_ratings (mpa_id, name) VALUES (1, 'G')");
         jdbcTemplate.update("INSERT INTO mpa_ratings (mpa_id, name) VALUES (2, 'PG')");
         jdbcTemplate.update("INSERT INTO mpa_ratings (mpa_id, name) VALUES (3, 'PG-13')");
@@ -62,7 +61,7 @@ class MpaRepositoryTest {
         assertThat(mpaRatings).hasSize(5);
         assertThat(mpaRatings).extracting(MpaRating::getName)
                 .containsExactlyInAnyOrder("G", "PG", "PG-13", "R", "NC-17");
-        
+
         assertThat(mpaRatings.get(0).getId()).isEqualTo(1L);
         assertThat(mpaRatings.get(1).getId()).isEqualTo(2L);
         assertThat(mpaRatings.get(2).getId()).isEqualTo(3L);
