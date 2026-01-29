@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.dao.dto.film.FilmDto;
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @RestController
 @RequestMapping("/films")
 @RequiredArgsConstructor
@@ -24,21 +26,25 @@ public class FilmController {
 
     @PostMapping
     public FilmDto create(@RequestBody @Valid NewFilmRequest request) {
+        log.info("Create film name={}", request.getName());
         return filmService.create(request);
     }
 
     @PutMapping
     public FilmDto update(@RequestBody @Valid UpdateFilmRequest request) {
+        log.info("Update film id={}", request.getId());
         return filmService.update(request);
     }
 
     @GetMapping
     public Collection<FilmDto> getAll() {
+        log.info("Get all films");
         return filmService.getAll();
     }
 
     @GetMapping("/{id}")
     public FilmDto getById(@PathVariable long id) {
+        log.info("Get film by id={}", id);
         return filmService.getById(id);
     }
 
@@ -48,12 +54,14 @@ public class FilmController {
             @RequestParam(required = false) Integer genreId,
             @RequestParam(required = false) Integer year
     ) {
+        log.info("Get popular films");
         return filmService.getPopularFilms(genreId, year, count);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFilm(@PathVariable long id) {
+        log.info("Delete film id={}", id);
         filmService.delete(id);
     }
 
@@ -61,6 +69,7 @@ public class FilmController {
     public List<FilmDto> getCommonFilms(
             @RequestParam long userId,
             @RequestParam long friendId) {
+        log.info("Get common films");
         return filmService.getCommonFilms(userId, friendId);
     }
 
@@ -69,8 +78,8 @@ public class FilmController {
             @PathVariable long directorId,
             @RequestParam(defaultValue = "likes") String sortBy
     ) {
-        List<FilmDto> films = filmService.getFilmsByDirector(directorId, sortBy);
-        return films;
+        log.info("Get films by director id={}", directorId);
+        return filmService.getFilmsByDirector(directorId, sortBy);
     }
 
     @GetMapping("/search")
@@ -83,6 +92,7 @@ public class FilmController {
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
 
+        log.info("Search films");
         return filmService.searchFilms(query, searchBy);
     }
 }

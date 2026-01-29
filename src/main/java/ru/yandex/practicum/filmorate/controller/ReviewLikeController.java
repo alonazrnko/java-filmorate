@@ -16,21 +16,20 @@ public class ReviewLikeController {
     @PutMapping("/like/{userId}")
     public void addLike(@PathVariable Long reviewId,
                         @PathVariable Long userId) {
-        log.info("PUT /reviews/{}/like/{} - добавление лайка", reviewId, userId);
+        log.debug("Add like to review id={} from user id={}", reviewId, userId);
         reviewLikeService.addLike(reviewId, userId);
     }
 
     @PutMapping("/dislike/{userId}")
     public void addDislike(@PathVariable Long reviewId,
                            @PathVariable Long userId) {
-        log.info("PUT /reviews/{}/dislike/{} - добавление дизлайка", reviewId, userId);
+        log.debug("Add dislike to review id={} from user id={}", reviewId, userId);
         reviewLikeService.addDislike(reviewId, userId);
     }
 
     @DeleteMapping("/like/{userId}")
     public void removeLike(@PathVariable Long reviewId,
                            @PathVariable Long userId) {
-        log.info("DELETE /reviews/{}/like/{} - удаление лайка", reviewId, userId);
         reviewLikeService.removeLike(reviewId, userId);
     }
 
@@ -38,7 +37,6 @@ public class ReviewLikeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeDislike(@PathVariable Long reviewId,
                               @PathVariable Long userId) {
-        log.info("DELETE /reviews/{}/dislike/{} - удаление дизлайка", reviewId, userId);
         reviewLikeService.removeDislike(reviewId, userId);
     }
 }

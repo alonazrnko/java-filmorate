@@ -22,26 +22,26 @@ public class ReviewController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReviewDto createReview(@Valid @RequestBody NewReviewRequest request) {
-        log.info("POST /reviews - создание нового отзыва: {}", request);
+        log.info("Create review={}", request);
         return reviewService.createReview(request);
     }
 
     @PutMapping
     public ReviewDto updateReview(@Valid @RequestBody UpdateReviewRequest request) {
-        log.info("PUT /reviews - обновление отзыва: {}", request);
+        log.info("Update review={}", request);
         return reviewService.updateReview(request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReview(@PathVariable("id") Long reviewId) {
-        log.info("DELETE /reviews/{} - удаление отзыва", reviewId);
+        log.info("Delete review id={}", reviewId);
         reviewService.deleteReview(reviewId);
     }
 
     @GetMapping("/{id}")
     public ReviewDto getReviewById(@PathVariable("id") Long reviewId) {
-        log.info("GET /reviews/{} - получение отзыва по ID", reviewId);
+        log.info("Get review by id={}", reviewId);
         return reviewService.getReviewById(reviewId);
     }
 
@@ -51,10 +51,10 @@ public class ReviewController {
             @RequestParam(value = "count", defaultValue = "10") Integer count) {
 
         if (filmId != null) {
-            log.info("GET /reviews?filmId={}&count={} - получение отзывов для фильма", filmId, count);
+            log.info("Get /reviews?filmId={}&count={} - reviews for film", filmId, count);
             return reviewService.getReviewsByFilmId(filmId, count);
         } else {
-            log.info("GET /reviews?count={} - получение всех отзывов", count);
+            log.info("Get /reviews?count={} - all reviews", count);
             return reviewService.getAllReviews(count);
         }
     }
