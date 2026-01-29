@@ -13,6 +13,7 @@ public class EventRepository extends BaseRepository<Event> {
 
     private static final String INSERT_EVENT_SQL = "INSERT INTO events (timestamp, user_id, event_type, operation, entity_id)" +
             "VALUES (?, ?, ?, ?, ?)";
+
     private static final String FIND_USER_FEED_SQL = "SELECT e.* FROM events e WHERE e.user_id = ? OR e.user_id IN" +
             "(SELECT f.friend_id FROM friendships f WHERE f.user_id = ?) ORDER BY e.timestamp ASC";
 

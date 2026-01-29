@@ -6,14 +6,14 @@ import lombok.Data;
 
 @Data
 public class ReviewLikeRequest {
-    @NotNull(message = "ID отзыва не может быть null")
-    @Positive(message = "ID отзыва должен быть положительным")
+    @NotNull(message = "Review ID cannot be empty")
+    @Positive(message = "Review ID must be positive")
     private Long reviewId;
 
-    @NotNull(message = "ID пользователя не может быть null")
-    @Positive(message = "ID пользователя должен быть положительным")
+    @NotNull(message = "User ID cannot be empty")
+    @Positive(message = "User ID must be positive")
     private Long userId;
 
-    @NotNull(message = "Тип реакции обязателен (true - лайк, false - дизлайк)")
+    @NotNull(message = "The reaction type is required (true - like, false - dislike)")
     private Boolean isLike;
 }

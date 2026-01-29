@@ -21,10 +21,10 @@ public class DirectorRepository extends BaseRepository<Director> {
     private static final String DIRECTOR_EXISTS_SQL = "SELECT COUNT(*) FROM directors WHERE director_id = ?";
     private static final String FIND_ALL_DIRECTORS_SQL = "SELECT * FROM directors ORDER BY director_id";
     private static final String FIND_DIRECTOR_BY_ID_SQL = "SELECT * FROM directors WHERE director_id = ?";
-    private static final String FIND_BY_FILM_ID_SQL = "SELECT fd.*, d.name FROM film_directors fd " +
-                    "JOIN directors d ON fd.director_id = d.director_id WHERE fd.film_id = ?";
     private static final String DELETE_BY_FILM_ID_SQL = "DELETE FROM film_directors WHERE film_id = ?";
     private static final String FILM_DIRECTOR_EXISTS_SQL = "SELECT COUNT(*) FROM film_directors WHERE film_id = ? AND director_id = ?";
+    private static final String FIND_BY_FILM_ID_SQL = "SELECT fd.*, d.name FROM film_directors fd " +
+            "JOIN directors d ON fd.director_id = d.director_id WHERE fd.film_id = ?";
 
 
     public DirectorRepository(JdbcTemplate jdbc, DirectorRowMapper mapper) {

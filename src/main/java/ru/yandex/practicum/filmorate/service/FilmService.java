@@ -83,6 +83,8 @@ public class FilmService {
     }
 
     public void delete(long id) {
+        log.info("Deleting film id={}", id);
+
         getById(id);
         boolean deleted = filmRepository.delete(id);
         if (!deleted) {
@@ -174,7 +176,7 @@ public class FilmService {
         userService.validateUserExists(friendId);
 
         if (userId == friendId) {
-            throw new ValidationException("ID пользователей должны быть разным");
+            throw new ValidationException("User IDs must be different");
         }
 
         List<Film> commonFilms = filmRepository.getCommonFilms(userId, friendId);
@@ -186,7 +188,7 @@ public class FilmService {
 
     public List<FilmDto> getFilmsByDirector(long directorId, String sortBy) {
         if (directorRepository.findById(directorId).isEmpty()) {
-            throw new NotFoundException("Режиссера с id " + directorId + "не существует");
+            throw new NotFoundException("Director with id= " + directorId + " not found");
         }
         return filmRepository.findByDirectorIdSorted(directorId, sortBy).stream()
                 .map(this::updateCollections)

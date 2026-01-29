@@ -7,10 +7,10 @@ import lombok.Data;
 
 @Data
 public class DirectorDto {
-    @NotNull(message = "ID режиссёра не может быть null")
-    @Positive(message = "ID режиссёра должен быть положительным")
+    @NotNull(message = "Director ID cannot be empty")
+    @Positive(message = "Director ID must be positive")
     private Long id;
 
-    @NotBlank(message = "Имя режиссёра не может быть пустым")
+    @NotBlank(message = "Director's name cannot be empty")
     private String name;
 }

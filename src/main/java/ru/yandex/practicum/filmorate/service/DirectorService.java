@@ -28,7 +28,7 @@ public class DirectorService {
 
     public DirectorDto update(DirectorDto director) {
         if (directorRepository.findById(director.getId()).isEmpty()) {
-            throw new NotFoundException("Режиссера с id " + director.getId() + "не существует");
+            throw new NotFoundException("Director with id=" + director.getId() + " not found");
         }
         Director directorUpdate = directorRepository.update(director);
         return directorMapper.mapToDirectorDto(directorUpdate);
@@ -47,7 +47,7 @@ public class DirectorService {
     public DirectorDto getById(Long id) {
         return directorRepository.findById(id)
                 .map(directorMapper::mapToDirectorDto)
-                .orElseThrow(() -> new NotFoundException("Режиссёр с id=" + id + " не найден"));
+                .orElseThrow(() -> new NotFoundException("Director with id=" + id + " not found"));
     }
 
     public Set<Long> getDirectorsIdsByFilm(long id) {

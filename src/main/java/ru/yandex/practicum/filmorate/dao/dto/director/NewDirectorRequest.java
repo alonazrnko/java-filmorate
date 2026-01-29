@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class NewDirectorRequest {
 
-    @NotBlank(message = "Имя режиссёра не может быть пустым")
+    @NotBlank(message = "Director's name cannot be empty")
     private String name;
 }
