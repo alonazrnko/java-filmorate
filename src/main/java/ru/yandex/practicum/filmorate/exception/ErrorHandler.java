@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    // 400 — ошибки валидации @Valid (request body)
+    // 400 - validation errors @Valid (request body)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         return new ErrorResponse("Validation error");
     }
 
-    // 400 — ошибки валидации параметров / PathVariable
+    // 400 - parameter validation errors / PathVariable
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolation(ConstraintViolationException e) {
@@ -31,14 +31,14 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    // 404 — объект не найден
+    // 404 — object not found
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFound(NotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
-    // 500 — всё остальное
+    // 500 — other
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(Throwable e) {

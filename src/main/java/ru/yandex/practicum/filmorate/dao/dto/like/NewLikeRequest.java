@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 public class NewLikeRequest {
-    @NotNull(message = "film ID cannot be empty")
-    @Positive(message = "film ID must be positive")
+    @NotNull(message = "Film ID cannot be empty")
+    @Positive(message = "Film ID must be positive")
     private Long filmId;
 
-    @NotNull(message = "user ID cannot be empty")
-    @Positive(message = "user ID must be positive")
+    @NotNull(message = "User ID cannot be empty")
+    @Positive(message = "User ID must be positive")
     private Long userId;
 }

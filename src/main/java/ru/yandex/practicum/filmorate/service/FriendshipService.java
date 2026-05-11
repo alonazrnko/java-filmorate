@@ -8,6 +8,8 @@ import ru.yandex.practicum.filmorate.dao.repository.FriendshipRepository;
 import ru.yandex.practicum.filmorate.dao.repository.UserRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Friendship;
+import ru.yandex.practicum.filmorate.model.enums.EventOperation;
+import ru.yandex.practicum.filmorate.model.enums.EventType;
 
 import java.util.Collection;
 import java.util.Set;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class FriendshipService {
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
+    private final EventService eventService;
 
     public void addFriend(long userId, long friendId) {
         log.info("Adding friend: {} -> {}", userId, friendId);
@@ -34,6 +37,13 @@ public class FriendshipService {
         friendship.setFriendId(friendId);
 
         friendshipRepository.add(friendship);
+
+        eventService.addEvent(
+                userId,
+                EventType.FRIEND,
+                EventOperation.ADD,
+                friendId
+        );
     }
 
     public void removeFriend(long userId, long friendId) {
@@ -46,6 +56,13 @@ public class FriendshipService {
                 .orElseThrow(() -> new NotFoundException("User not found: " + friendId));
 
         friendshipRepository.delete(userId, friendId);
+
+        eventService.addEvent(
+                userId,
+                EventType.FRIEND,
+                EventOperation.REMOVE,
+                friendId
+        );
     }
 
     public Collection<UserDto> getFriends(long userId) {

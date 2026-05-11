@@ -9,6 +9,8 @@ import ru.yandex.practicum.filmorate.dao.repository.LikeRepository;
 import ru.yandex.practicum.filmorate.dao.repository.UserRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Like;
+import ru.yandex.practicum.filmorate.model.enums.EventOperation;
+import ru.yandex.practicum.filmorate.model.enums.EventType;
 
 import java.util.Set;
 
@@ -19,6 +21,7 @@ public class LikeService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final FilmRepository filmRepository;
+    private final EventService eventService;
 
 
     public void addLike(long filmId, long userId) {
@@ -34,6 +37,13 @@ public class LikeService {
         likeRepository.addLike(like);
 
         LikeMapper.mapToLikeDto(like);
+
+        eventService.addEvent(
+                userId,
+                EventType.LIKE,
+                EventOperation.ADD,
+                filmId
+        );
     }
 
     public void removeLike(long filmId, long userId) {
@@ -47,6 +57,13 @@ public class LikeService {
                 });
 
         likeRepository.removeLike(filmId, userId);
+
+        eventService.addEvent(
+                userId,
+                EventType.LIKE,
+                EventOperation.REMOVE,
+                filmId
+        );
     }
 
     public Set<Long> getLikesIdsByFilm(long filmId) {

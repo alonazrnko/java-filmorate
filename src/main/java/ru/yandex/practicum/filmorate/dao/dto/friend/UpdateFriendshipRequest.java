@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 public class UpdateFriendshipRequest {
-    @NotNull(message = "user ID cannot be empty")
-    @Positive(message = "user ID must be positive")
+    @NotNull(message = "User ID cannot be empty")
+    @Positive(message = "User ID must be positive")
     private Long userId;
-    @NotNull(message = "friend ID cannot be empty")
-    @Positive(message = "friend ID must be positive")
+    @NotNull(message = "Friend ID cannot be empty")
+    @Positive(message = "Friend ID must be positive")
     private Long friendId;
 }
