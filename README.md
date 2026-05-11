@@ -1,114 +1,106 @@
-# Filmorate
+# Filmorate — Movie Recommendation Platform
 
-Backend service for a movie-focused social platform that allows users to interact with movies and with each other.  
-The application supports ratings, reviews, friendships, likes, activity feed, search, filtering, and age-based movie classification.
+A RESTful backend service for a movie-focused social platform where users can discover films, share opinions, build friendships, and track activity through a personalized feed.
 
----
+## Features
 
-## 📖 Overview
+**Movies**
+- Create, update and retrieve movies
+- MPA age rating classification
+- Genre and director filtering and sorting
+- Movie popularity ranking based on likes
+- Search by title
 
-Filmorate is a backend application designed to manage movies and user interactions around them.  
-In addition to basic movie data management, the system implements social features such as friendships, likes, reviews, and an activity feed that reflects user actions.
-
-The project focuses on backend business logic, REST API design, and clean, maintainable architecture with clear separation of responsibilities.
-
----
-
-## 🚀 Features
-
-### 🎬 Movie Management
-- Create, update, and retrieve movies
-- Age rating support (MPA / age-based classification)
-- Movie ratings and popularity calculation
-- Search movies by title
-- Filtering and sorting by genres and directors
-
-### 👤 User Management
+**Users & Social**
 - User registration and profile management
-- Friendship system between users
-- Tracking user interactions with movies
+- Friendship system — send, confirm and remove friends
+- View shared movie interests between users
 
-### ⭐ Reviews & Likes
-- Add, update, and delete reviews
+**Reviews & Likes**
+- Add, update and delete reviews
 - Like and dislike reviews
-- Aggregate review ratings
+- Aggregate review usefulness rating
 
-### 📰 Activity Feed
-- Centralized feed of user actions
-- Events for friendships, likes, reviews, and ratings
-- Chronological ordering of events
+**Activity Feed**
+- Chronological feed of user actions
+- Events for friendships, likes and reviews
 
----
-
-## 🧱 Architecture
-
-The application follows a layered architecture with explicit separation of responsibilities.
-
-- **Controller layer**  
-  Handles HTTP requests and responses, maps incoming data to DTOs, and delegates execution to the service layer.
-
-- **Service layer**  
-  Contains core business logic and orchestrates use cases across multiple domains (movies, users, reviews, events).
-
-- **DAO / Repository layer**  
-  Encapsulates all database access logic.
-  Uses repository abstractions and storage interfaces to isolate persistence logic from business logic.
-
-  Includes:
-  - Repositories for core domain entities (films, users, reviews, likes, events, friendships)
-  - Base repository abstractions for shared database operations
-  - Mapper components for converting database rows into domain models
-
-- **DTO layer**  
-  Data Transfer Objects used for request and response models, isolating API contracts from internal domain entities.
-
-- **Model layer**  
-  Domain models representing business entities and relationships.
-
-- **Validation & Exception handling**  
-  Centralized validation and custom exception handling to ensure consistent error responses.
-
-This architecture improves maintainability, testability, and scalability of the backend.
-
----
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Java 21**
-- **Spring Boot 3**
-- RESTful API
-- **H2** (in-memory database at the current stage)
-- SQL, JDBC
-- **JUnit 5** (unit and integration testing)
-- Maven
-- Lombok
-- Git / GitHub
+- **Spring Boot 3.2**
+- **H2** — embedded database with schema and seed data
+- **Spring JDBC** — explicit SQL, no ORM
+- **Logbook 3.7** — HTTP request/response logging
+- **Spring Validation** — declarative request validation
+- **Lombok** — boilerplate reduction
+- **JUnit 5** — unit and integration tests
+- **Maven**
 
----
+## Architecture
 
-## 🧪 Testing
+The application follows a layered architecture:
 
-- Unit tests for service-layer business logic
-- Integration tests for REST endpoints
-- Verification of data consistency and business rules
+**Controller** → **Service** → **DAO/Repository** → **H2**
 
----
+- `controller` — REST endpoints, request/response handling
+- `service` — business logic across films, users, reviews, events
+- `dao` — data access layer with repository abstractions and row mappers
+- `model` — core domain entities
+- `dto` — API-facing models decoupled from domain
+- `validation` — custom validators
+- `exception` — custom exceptions and global error handler
 
-## 📂 Project Structure
+## Getting Started
 
-```text
-ru.yandex.practicum.filmorate
- ├── controller
- ├── service
- ├── dao
- │   ├── dto
- │   ├── repository
- │   │   ├── mappers
- │   │   ├── repositories
- │   ├── FilmStorage
- │   └── UserStorage
- ├── model
- ├── validation
- ├── exception
- ├── resources
- └── FilmorateApplication
+### Requirements
+- Java 21 or higher
+- Maven installed
+
+### Run locally
+
+```bash
+git clone https://github.com/alonazrnko/filmorate.git
+cd filmorate
+mvn spring-boot:run
+```
+
+The API will be available at `http://localhost:8080`
+
+Database schema and seed data are initialized automatically on startup via `schema.sql` and `data.sql`.
+
+### Run tests
+
+```bash
+mvn test
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/films` | Get all films |
+| POST | `/films` | Add a new film |
+| PUT | `/films/{id}/like/{userId}` | Like a film |
+| GET | `/films/popular` | Get popular films |
+| GET | `/films/search` | Search films by title |
+| GET | `/users` | Get all users |
+| POST | `/users` | Create a user |
+| PUT | `/users/{id}/friends/{friendId}` | Add friend |
+| GET | `/users/{id}/feed` | Get user activity feed |
+| POST | `/reviews` | Add a review |
+| PUT | `/reviews/{id}/like/{userId}` | Like a review |
+
+## Testing
+
+- Repository integration tests for all core entities — `FilmRepositoryTest`, `UserRepositoryTest`, `ReviewRepositoryTest` and others
+- Tests run against in-memory H2 database — no external dependencies required
+- Full application context test via `FilmorateApplicationTests`
+
+## Key Design Decisions
+
+- **Spring JDBC over JPA** — explicit SQL queries give full control and make data access behavior transparent and predictable
+- **Repository abstractions** — base repository layer shared across entities reduces duplication in data access code
+- **H2 with schema.sql and data.sql** — database is fully reproducible from source, no manual setup needed
+- **Logbook** — all HTTP traffic is logged automatically, simplifying debugging without manual logging in controllers
+- **EventService** — activity feed is implemented as a dedicated service that records user actions across all domains
